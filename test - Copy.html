@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>el asta</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuzzyset.js/0.0.1/fuzzyset.min.js"></script>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        img {
+            border: 5px solid #6f42b8;
+            border-radius: 10px;
+        }
+
+        #clock,
+        #stopwatch {
+            font-size: 2em;
+            text-align: center;
+            margin-top: 20px;
+            color: #bb86fc;
+        }
+
+        .button {
+            margin-top: 10px;
+            background-color: #bb86fc;
+            color: #121212;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #3700b3;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        a {
+            text-decoration: none;
+            color: #bb86fc;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form action="/hi" method="post" onsubmit="openYouTube(event)">
+        <label for="name">انا :</label><br>
+        <input type="text" name="name" id="name">
+        <button type="submit" class="button">asta</button>
+    </form>
+    <br>
+    <a href="test.html">
+        <img src="ramen.jpeg" width="100" height="100">
+    </a>
+    <div id="clock">00:00:00</div>
+    <div id="stopwatch">00:00:00</div>
+    <button class="button" onclick="startStopwatch()">Start Stopwatch</button>
+    <button class="button" onclick="stopStopwatch()">Stop Stopwatch</button>
+    <button class="button" onclick="resetStopwatch()">Reset Stopwatch</button>
+
+    <script>
+        let stopwatchInterval;
+        let stopwatchStartTime;
+        let stopwatchElapsed = 0;
+
+        function openYouTube(event) {
+            event.preventDefault();
+            const nameInput = document.getElementById('name').value;
+            const correctName = '1234567';
+
+            const fuzzySet = FuzzySet();
+            fuzzySet.add(correctName);
+
+            const matches = fuzzySet.get(nameInput, null, 0.5);
+
+            if (matches && matches.length > 0 && matches[0][1] === correctName) {
+                window.open('https://www.youtube.com', '_blank');
+            } else {
+                alert('الاسم المدخل غير صحيح.');
+            }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        function updateStopwatch() {
+            const now = new Date();
+            const elapsed = now - stopwatchStartTime + stopwatchElapsed;
+            const hours = String(Math.floor(elapsed / (1000 * 60 * 60) % 24)).padStart(2, '0');
+            const minutes = String(Math.floor(elapsed / (1000 * 60) % 60)).padStart(2, '0');
+            const seconds = String(Math.floor(elapsed / 1000 % 60)).padStart(2, '0');
+            document.getElementById('stopwatch').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        function startStopwatch() {
+            if (stopwatchInterval) return;
+            stopwatchStartTime = new Date();
+            stopwatchInterval = setInterval(updateStopwatch, 1000);
+        }
+
+        function stopStopwatch() {
+            if (!stopwatchInterval) return;
+            clearInterval(stopwatchInterval);
+            stopwatchElapsed += new Date() - stopwatchStartTime;
+            stopwatchInterval = null;
+        }
+
+        function resetStopwatch() {
+            clearInterval(stopwatchInterval);
+            stopwatchElapsed = 0;
+            stopwatchInterval = null;
+            document.getElementById('stopwatch').textContent = '00:00:00';
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+<img src="C:\Users\dell\Desktop\HTML\test\friendship.jpeg" width="250" height="250">
+</body>
+
+</html>
